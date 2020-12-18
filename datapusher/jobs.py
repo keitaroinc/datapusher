@@ -471,7 +471,8 @@ def push_to_datastore(task_id, input, dry_run=False):
 
     row_set.register_processor(messytables.types_processor(types))
 
-    headers = [header.strip() for header in headers if header.strip()]
+    # when cleaning headers, we should also clean corresponding types
+    headers, types = zip(*[(header.strip(), typ) for header, typ in zip(headers, types) if header.strip()])
     headers_set = set(headers)
 
     def row_iterator():
