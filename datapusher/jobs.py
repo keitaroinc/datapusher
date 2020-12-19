@@ -487,7 +487,7 @@ def push_to_datastore(task_id, input, dry_run=False):
                     continue
                 if isinstance(cell.value, str):
                     try:
-                        data_row[column_name] = cell.value.encode('latin-5').decode('utf-8')
+                        data_row[column_name] = cell.value.encode('latin5').decode('utf-8')
                     except (UnicodeDecodeError, UnicodeEncodeError):
                         data_row[column_name] = cell.value
                 else:
