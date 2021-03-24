@@ -471,7 +471,11 @@ def push_to_datastore(task_id, input, dry_run=False):
 
     row_set.register_processor(messytables.types_processor(types))
 
-    headers = [header.strip() for header in headers if header.strip()]
+    # Save column A
+    if headers and headers[0].strip() == '':
+        headers[0] = 'column_0'
+    # when cleaning headers, we should also clean corresponding types
+    headers, types = zip(*[(header.strip(), typ) for header, typ in zip(headers, types) if header.strip()])
     headers_set = set(headers)
 
     def row_iterator():
@@ -483,7 +487,7 @@ def push_to_datastore(task_id, input, dry_run=False):
                     continue
                 if isinstance(cell.value, str):
                     try:
-                        data_row[column_name] = cell.value.encode('latin-1').decode('utf-8')
+                        data_row[column_name] = cell.value.encode('latin5').decode('utf-8')
                     except (UnicodeDecodeError, UnicodeEncodeError):
                         data_row[column_name] = cell.value
                 else:
